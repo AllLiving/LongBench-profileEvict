@@ -110,3 +110,65 @@ Finally, run `python result.py` to export the evaluation results.
     pages = "3119--3137",
 }
 ```
+
+# LongBench Evaluation Framework (Refactored)
+
+针对 vLLM PagedEviction 项目优化的 LongBench 测评脚本。
+
+## 📂 目录结构
+* `config/`: 环境变量与路径配置 (修改 `env.sh` 以适配你的机器)
+* `src/`: 核心 Python 逻辑 (vLLM 推理与 Metrics 计算)
+* `scripts/`: 一键执行脚本
+* `results/`: 实验结果输出目录 (自动生成)
+
+## 🚀 快速开始 (Quick Start)
+
+### 0. 环境准备
+确保你已激活 conda 环境：
+```bash
+conda activate vllm-pagedEvct
+cd ~/studio/LongBench-profileEvict
+
+首次使用请检查 config/env.sh，确保模型路径正确：
+export MODEL_PATH="/path/to/your/Llama-3..."
+
+bash scripts/run_inference.sh baseline
+bash scripts/run_inference.sh ours_l2 1024
+bash scripts/run_inference.sh ours_richness 1024
+
+# 查看 Baseline 分数
+bash scripts/run_eval.sh baseline_full
+# 查看 Value L2 分数
+bash scripts/run_eval.sh ours_l2_1024
+
+---
+
+### 💡 总结：你应该如何操作
+
+现在，当你下次登录服务器并进入 `LongBench-profileEvict` 目录时，你的操作流是非常清晰的：
+
+1.  **跑基线：**
+    ```bash
+    bash scripts/run_inference.sh baseline
+    ```
+2.  **跑你的算法：**
+    ```bash
+    bash scripts/run_inference.sh ours_l2 1024
+    ```
+3.  **看分（直接出结果）：**
+    ```bash
+    bash scripts/run_eval.sh ours_l2_1024
+    ```
+
+输出将会像这样清晰：
+
+```text
+========================================
+📊 Evaluation Results (results/ours_l2_1024):
+========================================
+{
+    "samsum": 42.5,
+    "narrativeqa": 18.2
+}
+========================================
+✅ Results also saved to: results/ours_l2_1024/result.json

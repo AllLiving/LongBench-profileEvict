@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+.conda/
+
+# IDE
+.vscode/
+.idea/
+
+# LongBench Specifics
+results/
+results_longbench/
+pred/
+pred_e/
+models/
+data/
+*.jsonl
+*.log
+cedar*
+config/env.sh
