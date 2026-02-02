@@ -81,6 +81,8 @@ def get_pred(llm, examples, max_tokens, dataset_name):
         print(f"[DEBUG PROMPT SAMPLE] Last 300 chars:\n...{input_prompts[0][-300:]}\n")
 
     # 4. 执行生成
+    if len(input_prompts) > 0:
+        print(f"[src/run_vllm] Approx Prompt Length (Chars): {len(input_prompts[0])}")
     outputs = llm.generate(input_prompts, sampling_params)
     preds = [output.outputs[0].text.strip() for output in outputs]
     return preds
@@ -93,11 +95,14 @@ def run_eval(args):
     engine_args = {
         "model": args.model,
         "trust_remote_code": True,
-        "gpu_memory_utilization": 0.65,
+        # "gpu_memory_utilization": 0.65,
+        "gpu_memory_utilization": 0.9,
         # 关键点：让 vLLM 认为它能处理超长文本 (例如 32k)，
         # 实际显存占用由你的 cache_budget (例如 4k) 物理限制。
-        "max_model_len": 32000, 
-        "max_num_batched_tokens": 32000, 
+        # "max_model_len": 32000,
+        "max_model_len": 65536,
+        # "max_num_batched_tokens": 32000,
+        "max_num_batched_tokens": 65536,
         "enforce_eager": True,
         "dtype": "auto",
         "enable_chunked_prefill": False, # 必须关闭，因为你的 Pruner 目前不支持 chunked

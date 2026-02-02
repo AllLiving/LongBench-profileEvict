@@ -34,7 +34,7 @@ run_task() {
 case $MODE in
     "baseline")
         # 对应你原本的 Full Cache Baseline
-        run_task "baseline_full" ""
+        run_task "baseline_full" "--initial-blocks 16"
         ;;
         
     "streaming")
