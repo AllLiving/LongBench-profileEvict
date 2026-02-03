@@ -5,13 +5,14 @@ source config/env.sh
 
 # 2. 默认参数
 MODE=${1:-"baseline"}  # 默认为 baseline，可选: ours_l2, ours_richness
-BUDGET=${2:-1024}      # 默认 Budget
+BUDGET=${2:-4096}      # 默认 Budget
+DATASETS=${3:-$DEFAULT_DATASETS}
 
 echo "=========================================="
 echo "Model: $MODEL_PATH"
 echo "Mode:  $MODE"
 echo "Budget: $BUDGET"
-echo "Datasets: $DEFAULT_DATASETS"
+echo "Datasets: $DATASETS"
 echo "=========================================="
 
 # 3. 定义通用运行函数
@@ -23,10 +24,11 @@ run_task() {
     
     python src/run_vllm.py \
         --model $MODEL_PATH \
-        --datasets $DEFAULT_DATASETS \
+        --datasets $DATASETS \
         --output-dir "$OUTPUT_ROOT/$EXP_NAME" \
         --max-samples 20 \
         --cache-budget $BUDGET \
+        --max-len 16384 \
         $EXTRA_ARGS
 }
 
@@ -37,9 +39,9 @@ case $MODE in
         run_task "baseline_full" "--initial-blocks 16"
         ;;
         
-    "streaming")
+    "streamingLLM")
         # 对应你原本的 StreamingLLM Baseline
-        run_task "streaming_${BUDGET}" \
+        run_task "streamingLLM_${BUDGET}" \
             "--enable-paged-eviction --evict-method streamingLLM --initial-blocks 16"
         ;;
         
@@ -47,6 +49,11 @@ case $MODE in
         # 对应你原本的 PagedEviction (Value L2)
         run_task "ours_l2_${BUDGET}" \
             "--enable-paged-eviction --evict-method global --evict-metric value_l2 --initial-blocks 4"
+        ;;
+
+    "ours_paged_ratio")
+        run_task "ours_pratio_${BUDGET}" \
+            "--enable-paged-eviction --evict-method global --evict-metric paged_ratio --initial-blocks 4"
         ;;
         
     "ours_richness")
