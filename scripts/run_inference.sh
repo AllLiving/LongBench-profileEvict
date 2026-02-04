@@ -42,7 +42,7 @@ case $MODE in
     "streamingLLM")
         # 对应你原本的 StreamingLLM Baseline
         run_task "streamingLLM_${BUDGET}" \
-            "--enable-paged-eviction --evict-method streamingLLM --initial-blocks 16"
+            "--enable-paged-eviction --evict-method streamingLLM --initial-blocks 1"
         ;;
         
     "ours_l2")
