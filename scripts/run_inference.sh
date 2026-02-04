@@ -28,7 +28,7 @@ run_task() {
         --output-dir "$OUTPUT_ROOT/$EXP_NAME" \
         --max-samples 20 \
         --cache-budget $BUDGET \
-        --max-len 16384 \
+        --max-len 32768 \
         $EXTRA_ARGS
 }
 
